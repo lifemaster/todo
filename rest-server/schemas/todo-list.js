@@ -1,7 +1,7 @@
 const mongoose = require('../helpers/mongoDB');
 const Schema = mongoose.Schema;
 
-let todoGroupSchema = new Schema({
+let todoListSchema = new Schema({
   userId: {
     type: String,
     required: true
@@ -13,4 +13,4 @@ let todoGroupSchema = new Schema({
   description: String
 });
 
-module.exports = mongoose.model('TodoGroup', todoGroupSchema);
+module.exports = mongoose.model('TodoList', todoListSchema);

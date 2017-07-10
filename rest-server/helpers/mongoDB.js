@@ -1,15 +1,13 @@
-const mongoose = require('mongoose'); 
-
-// Build the connection string 
-const dbURI = 'mongodb://127.0.0.1/test';
+const mongoose = require('mongoose');
+const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
 
 // Create the database connection 
-mongoose.connect(dbURI); 
+mongoose.connect(config.dbURI); 
 
 // CONNECTION EVENTS
 // When successfully connected
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + dbURI);
+  console.log('Mongoose default connection open to ' + config.dbURI);
 }); 
 
 // If the connection throws an error

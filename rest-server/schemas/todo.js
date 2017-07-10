@@ -6,7 +6,7 @@ let todoSchema = new Schema({
     type: String,
     required: true
   },
-  groupId: {
+  listId: {
     type: String,
     required: true
   },

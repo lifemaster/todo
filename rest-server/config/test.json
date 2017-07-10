@@ -1,0 +1,5 @@
+{
+  "port": 1234,
+  "dbURI": "mongodb://127.0.0.1/todo-test",
+  "jwtSecret": "secret"
+}

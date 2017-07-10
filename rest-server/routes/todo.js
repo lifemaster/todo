@@ -1,14 +1,14 @@
 const passport = require('../helpers/passport');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
-const TodoGroup = require('../schemas/todo-group');
+const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
+const TodoList = require('../schemas/todo-list');
 const Todo = require('../schemas/todo');
 
 module.exports = function(app) {
   
-  // CRUD of todo-groups
+  // CRUD for todo-list
   
-  app.get('/todo-groups', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.get('/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {
@@ -16,12 +16,11 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      TodoGroup.find({ userId }, (err, docs) => err ? return next(err) : res.json(docs);
-      });
+      TodoList.find({ userId }, (err, docs) => err ? next(err) : res.json(docs));
     });
   });
 
-  app.post('/todo-group', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.post('/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title) {
       res.status(400).send('title is required');
       return;
@@ -34,25 +33,24 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      let todoGroup = new TodoGroup({
+      let newTodoList = new TodoList({
         userId,
         title: req.body.title,
         description: req.body.description || ''
       });
 
-      todoGroup.save((err, doc) => err ? next(err) : res.json(doc);
-      });
+      newTodoList.save((err, doc) => err ? next(err) : res.json(doc));
     });
   });
 
-  app.patch('/todo-group/:groupId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.patch('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title && !req.body.description) {
       res.status(400).send('title or description is required');
       return;
     }
 
-    if(!req.params.groupId) {
-      res.status(400).send('group todo id is required');
+    if(!req.params.id) {
+      res.status(400).send('todo list id is required');
       return;
     }
 
@@ -63,7 +61,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      TodoGroup.findOne({ '$and': [{ _id: req.params.groupId }, { userId }] }, (err, doc) => {
+      TodoList.findOne({ '$and': [{ _id: req.params.id }, { userId }] }, (err, doc) => {
         if(!doc) {
           return res.status(404).send('Not Found');
         }
@@ -76,7 +74,7 @@ module.exports = function(app) {
     });
   });
 
-  app.delete('/todo-group/:groupId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.delete('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {
@@ -85,7 +83,7 @@ module.exports = function(app) {
       let userId = decoded.id;
 
       // Remove all todos in this group
-      Todo.find({ groupId: req.params.groupId }, (err, docs) => {
+      Todo.find({ listId: req.params.id }, (err, docs) => {
         let promisesArr = [];
 
         docs.forEach(doc => {
@@ -101,13 +99,13 @@ module.exports = function(app) {
         Promise.all(promisesArr)
           .then(todos => {
             return new Promise((resolve, reject) => {
-              TodoGroup.findByIdAndRemove(req.params.groupId, (err, doc) => {
+              TodoList.findByIdAndRemove(req.params.id, (err, doc) => {
                 return err ? reject(err) : resolve(doc);
               });
             });
           })
-          .then(todoGroup => {
-            res.json(todoGroup);
+          .then(TodoList => {
+            res.json(TodoList);
           })
           .catch(err => next(err));
       });
@@ -115,14 +113,14 @@ module.exports = function(app) {
   });
 
   
-  // CRUD of todos
+  // CRUD for todos
 
-  app.get('/todo-group/:groupId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.get('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
-    let groupId = req.params.groupId;
+    let listId = req.params.id;
 
-    if(!groupId) {
-      res.status(400).send('todo group id is required');
+    if(!listId) {
+      res.status(400).send('todo list id is required');
       return;
     }
     
@@ -131,7 +129,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      Todo.find({ '$and': [{ groupId }, { userId }] }, (err, docs) => {
+      Todo.find({ '$and': [{ listId }, { userId }] }, (err, docs) => {
         if(err) return next(err);
 
         docs ? res.json(docs) : res.status(404).send('Not Found');
@@ -139,14 +137,14 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/todo-group/:groupId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.post('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title) {
       res.status(400).send('title is required');
       return;
     }
 
-    if(!req.params.groupId) {
-      res.status(400).send('todo group id is required');
+    if(!req.params.id) {
+      res.status(400).send('todo list id is required');
       return;
     }
 
@@ -157,7 +155,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      TodoGroup.findOne({ '$and': [{ _id: req.params.groupId }, { userId }] }, (err, doc) => {
+      TodoList.findOne({ '$and': [{ _id: req.params.id }, { userId }] }, (err, doc) => {
         if(err) {
           next(err);
           return;
@@ -169,7 +167,7 @@ module.exports = function(app) {
 
         let todo = new Todo({
           userId,
-          groupId: req.params.groupId,
+          listId: req.params.id,
           title: req.body.title,
           description: req.body.description || ''
         });
@@ -179,7 +177,7 @@ module.exports = function(app) {
     });
   });
 
-  app.patch('/todo/:todoId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.patch('/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title) {
       res.status(400).send('title is required and mustn\'t be an empty string');
       return;
@@ -190,7 +188,7 @@ module.exports = function(app) {
       return;
     }
 
-    if(!req.params.todoId) {
+    if(!req.params.id) {
       res.status(400).send('todo id is required');
       return;
     }
@@ -202,7 +200,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      Todo.findOne({ '$and': [{ _id: req.params.todoId }, { userId }] }, (err, doc) => {
+      Todo.findOne({ '$and': [{ _id: req.params.id }, { userId }] }, (err, doc) => {
         if(!doc) {
           return res.status(404).send('Not Found');
         }
@@ -216,7 +214,7 @@ module.exports = function(app) {
     });
   });
 
-  app.delete('/todo/:todoId', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.delete('/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {
@@ -224,7 +222,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      Todo.findOne({ '$and': [{ _id: req.params.todoId }, { userId }] }, (err, doc) => {
+      Todo.findOne({ '$and': [{ _id: req.params.id }, { userId }] }, (err, doc) => {
         if(!doc) {
           return res.status(404).send('Not Found');
         }

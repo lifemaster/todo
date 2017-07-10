@@ -1,10 +1,11 @@
 {
   "name": "rest-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is rest server for Todo App",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=dev node app.js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,10 @@
     "mongoose": "^4.11.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.4.2"
   }
 }

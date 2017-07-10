@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../schemas/user');
-const config = require('../config');
+const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
 const passport = require('../helpers/passport');
 
 module.exports = function(app) {
@@ -31,8 +31,19 @@ module.exports = function(app) {
       return;
     }
 
-    let user = new User(req.body);
+    if(typeof req.body.name === 'number' || typeof req.body.password === 'number') {
+      res.status(400).send('name and password must be a string');
+      return;
+    }
 
-    user.save(user, (err, user) => err ? next(err) : res.json(user));
+    User.findOne({ name: req.body.name }, (err, user) => {
+      if(user) {
+        res.status(400).send('Username already exists');
+      }
+      else {
+        let user = new User(req.body);
+        user.save(user, (err, user) => err ? next(err) : res.json(user));
+      }
+    });
   });
 }

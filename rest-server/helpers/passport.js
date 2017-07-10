@@ -1,7 +1,7 @@
 const User = require('../schemas/user');
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
-const config = require('../config');
+const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
 
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
