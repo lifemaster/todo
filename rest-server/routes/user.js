@@ -31,7 +31,7 @@ module.exports = function(app) {
       return;
     }
 
-    if(typeof req.body.name === 'number' || typeof req.body.password === 'number') {
+    if(typeof req.body.name !== 'string' || typeof req.body.password !== 'string') {
       res.status(400).send('name and password must be a string');
       return;
     }
