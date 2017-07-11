@@ -12,7 +12,7 @@ jwtOptions.secretOrKey = config.jwtSecret;
 
 let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   
-  console.log('payload received', jwt_payload);
+  // console.log('payload received', jwt_payload);
   
   let user = User.findById(jwt_payload.id).exec((err, user) => {
     if(user) {

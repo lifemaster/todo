@@ -82,7 +82,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      // Remove all todos in this group
+      // Remove all todos in this todo list
       Todo.find({ listId: req.params.id }, (err, docs) => {
         let promisesArr = [];
 
@@ -96,17 +96,16 @@ module.exports = function(app) {
           promisesArr.push(promise);
         });
 
+        // And then remove todo list 
         Promise.all(promisesArr)
           .then(todos => {
             return new Promise((resolve, reject) => {
-              TodoList.findByIdAndRemove(req.params.id, (err, doc) => {
+              TodoList.findOneAndRemove({ '$and': [{ _id: req.params.id }, { userId }]}, (err, doc) => {
                 return err ? reject(err) : resolve(doc);
               });
             });
           })
-          .then(TodoList => {
-            res.json(TodoList);
-          })
+          .then(doc => doc ? res.json(doc) : res.status(404).send())
           .catch(err => next(err));
       });
     });
@@ -178,13 +177,13 @@ module.exports = function(app) {
   });
 
   app.patch('/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    if(!req.body.title) {
-      res.status(400).send('title is required and mustn\'t be an empty string');
+    if('title' in req.body && !req.body.title) {
+      res.status(400).send('title mustn\'t be an empty string');
       return;
     }
 
-    if(typeof req.body.isDone !== 'boolean') {
-      res.status(400).send('isDone is required');
+    if(req.body.isDone && typeof req.body.isDone !== 'boolean') {
+      res.status(400).send('isDone must be boolean');
       return;
     }
 
