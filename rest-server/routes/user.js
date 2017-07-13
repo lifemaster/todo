@@ -42,7 +42,17 @@ module.exports = function(app) {
       }
       else {
         let user = new User(req.body);
-        user.save(user, (err, user) => err ? next(err) : res.json(user));
+        user.save(user, (err, user) => {
+          if(err) {
+            next(err);
+            return;
+          }
+
+          let payload = {id: user.id};
+          let token = jwt.sign(payload, config.jwtSecret);
+          
+          res.json({message: "ok", token: token});
+        });
       }
     });
   });
