@@ -1,5 +1,8 @@
 {
   "port": 1234,
   "dbURI": "mongodb://127.0.0.1/todo-dev",
-  "jwtSecret": "secret"
+  "jwtSecret": "secret",
+  "allowedOrigins": [
+    "http://localhost:3000"
+  ]
 }

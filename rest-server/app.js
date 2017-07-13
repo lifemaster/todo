@@ -11,14 +11,18 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   let origin = req.headers.origin;
-  let allowedOrigins = ['http://localhost:3000'];
 
-  if(allowedOrigins.indexOf(origin) > -1) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+  if(origin) {
+    let allowedOrigins = config.allowedOrigins;
+
+    if(allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH', 'DELETE');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
   }
-
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH', 'DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   return next();
 });
 
