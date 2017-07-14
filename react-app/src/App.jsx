@@ -9,14 +9,30 @@ import NotFound from './components/NotFound';
 
 class App extends Component {
 
-  signIn = token => {
+  constructor() {
+    super();
+
+    this.signIn = this.signIn.bind(this);
+    this.signOut = this.signOut.bind(this);
+    this.handleSelectTodoList = this.handleSelectTodoList.bind(this);
+
+    this.state = {
+      selectedTodoListTitle: null
+    };
+  }
+
+  signIn(token) {
     window.setCookie('token', token, { expires: 1440 });
     this.props.history.push('/todo-list');
   }
 
-  signOut = () => {
+  signOut() {
     window.removeCookie('token');
     this.props.history.push('/sign-in');
+  }
+
+  handleSelectTodoList(todoListTitle) {
+    this.setState({ selectedTodoListTitle: todoListTitle });
   }
 
   render() {
@@ -53,10 +69,7 @@ class App extends Component {
           path="/todo-list"
           render={props =>
             window.getCookie('token') ?
-            <TodoList
-              token={window.getCookie('token')}
-              onSignOut={this.signOut}
-            /> :
+            <TodoList onSignOut={this.signOut} onSelectTodoList={this.handleSelectTodoList} /> :
             <Redirect to="/sign-in" />
           }
         />
@@ -66,9 +79,9 @@ class App extends Component {
           render={props =>
             window.getCookie('token') ?
             <Todo
-              token={window.getCookie('token')}
               onHistoryBack={props.history.goBack}
               id={props.match.params.id}
+              selectedTodoListTitle={this.state.selectedTodoListTitle}
             /> :
             <Redirect to="/sign-in" />
           }

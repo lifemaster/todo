@@ -1,10 +1,10 @@
 import React from 'react';
 
+import Button from './Button';
+
 function SignOut(props) {
   return (
-    <p>
-      <button onClick={props.onSignOut}>Logout</button>
-    </p>
+    <Button onClick={props.onSignOut}>Выйти</Button>
   );
 }
 
