@@ -131,7 +131,7 @@ module.exports = function(app) {
       Todo.find({ '$and': [{ listId }, { userId }] }, (err, docs) => {
         if(err) return next(err);
 
-        docs ? res.json(docs) : res.status(404).send('Not Found');
+        res.json(docs);
       });
     });
   });
