@@ -7,7 +7,7 @@ import Button from './Button';
 function TodoElement(props) {
   return (
     <div className={`todo${props.completed ? ' completed' : ''}`}>
-      <Checkbox onChange={
+      <Checkbox initiallyChecked={props.completed} onChange={
         isChecked => {
           props.onEdit({
             id: props.id,

@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Checkbox extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.clickHandler = this.clickHandler.bind(this);
 
     this.state = {
-      checked: false
+      checked: this.props.initiallyChecked
     }
   }
 
@@ -31,6 +31,7 @@ class Checkbox extends React.Component {
 }
 
 Checkbox.propTypes = {
+  initiallyChecked: PropTypes.bool.isRequired,
   onChange: PropTypes.func
 }
 
