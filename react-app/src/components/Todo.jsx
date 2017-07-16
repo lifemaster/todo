@@ -15,11 +15,12 @@ class Todo extends React.Component {
     this.handleRemove = this.handleRemove.bind(this);
 
     this.state = {
+      todoListTitle: null,
       todos: []
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let self = this;
 
     fetch(`http://localhost:1234/todo-list/${this.props.id}`, {
@@ -38,7 +39,8 @@ class Todo extends React.Component {
     })
     .then(data => {
       self.setState({
-        todos: data
+        todoListTitle: data.listTitle,
+        todos: data.todos
       });
     })
     .catch(err => console.log(err));
@@ -136,7 +138,7 @@ class Todo extends React.Component {
     return (
       <main>
         <Header
-          title={this.props.selectedTodoListTitle}
+          title={this.state.todoListTitle}
           element={<Button onClick={this.props.onHistoryBack}>Назад</Button>}
         />
         
@@ -165,8 +167,7 @@ class Todo extends React.Component {
 
 Todo.propTypes = {
   id: PropTypes.string.isRequired,
-  onHistoryBack: PropTypes.func.isRequired,
-  selectedTodoListTitle: PropTypes.string.isRequired
+  onHistoryBack: PropTypes.func.isRequired
 }
 
 export default Todo;

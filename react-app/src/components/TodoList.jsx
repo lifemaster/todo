@@ -18,7 +18,7 @@ class TodoList extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let self = this;
 
     fetch('http://localhost:1234/todo-list', {
@@ -116,7 +116,6 @@ class TodoList extends React.Component {
                   title={todoListItem.title}
                   key={todoListItem._id}
                   onRemove={this.handleRemove}
-                  onSelectTodoList={this.props.onSelectTodoList}
                 />
               )
             })

@@ -128,10 +128,16 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      Todo.find({ '$and': [{ listId }, { userId }] }, (err, docs) => {
+      TodoList.findOne({ '$and': [{ _id: listId }, { userId }] }, (err, doc) => {
         if(err) return next(err);
 
-        res.json(docs);
+        let listTitle = doc.title;
+
+        Todo.find({ '$and': [{ listId }, { userId }] }, (err, docs) => {
+          if(err) return next(err);
+
+          res.json({ listTitle, todos: docs });
+        });
       });
     });
   });

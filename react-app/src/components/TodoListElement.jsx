@@ -9,8 +9,7 @@ function TodoListElement(props) {
     <div className="todo">
       <Link
         to={`/todo-list/${props.id}`}
-        className="todo-title"
-        onClick={() => props.onSelectTodoList(props.title)}>
+        className="todo-title">
         {props.title}
       </Link>
       <Button
@@ -25,8 +24,7 @@ function TodoListElement(props) {
 TodoListElement.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onSelectTodoList: PropTypes.func.isRequired
+  onRemove: PropTypes.func.isRequired
 };
 
 export default TodoListElement;

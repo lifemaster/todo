@@ -14,10 +14,9 @@ class App extends Component {
 
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
-    this.handleSelectTodoList = this.handleSelectTodoList.bind(this);
 
     this.state = {
-      selectedTodoListTitle: null
+      
     };
   }
 
@@ -29,10 +28,6 @@ class App extends Component {
   signOut() {
     window.removeCookie('token');
     this.props.history.push('/sign-in');
-  }
-
-  handleSelectTodoList(todoListTitle) {
-    this.setState({ selectedTodoListTitle: todoListTitle });
   }
 
   render() {
@@ -69,7 +64,7 @@ class App extends Component {
           path="/todo-list"
           render={props =>
             window.getCookie('token') ?
-            <TodoList onSignOut={this.signOut} onSelectTodoList={this.handleSelectTodoList} /> :
+            <TodoList onSignOut={this.signOut} /> :
             <Redirect to="/sign-in" />
           }
         />
@@ -81,7 +76,6 @@ class App extends Component {
             <Todo
               onHistoryBack={props.history.goBack}
               id={props.match.params.id}
-              selectedTodoListTitle={this.state.selectedTodoListTitle}
             /> :
             <Redirect to="/sign-in" />
           }
