@@ -11,6 +11,7 @@ class TodoList extends React.Component {
     super(props);
 
     this.handleAdd = this.handleAdd.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
 
     this.state = {
@@ -69,6 +70,42 @@ class TodoList extends React.Component {
     .catch(err => console.log(err));
   }
 
+  handleEdit(params, callback) {
+    if(!params.title) {
+      return callback();
+    }
+
+    let self = this;
+
+    fetch(`http://localhost:1234/todo-list/${params.id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `JWT ${window.getCookie('token')}`
+      },
+      method: 'PATCH',
+      body: JSON.stringify({title: params.title})
+    })
+    .then(response => {
+      if(response.status === 200) {
+        return response.json();
+      }
+      else {
+        console.log(response);
+      }
+    })
+    .then(data => {
+      let todoList = self.state.todoList;
+      let index = todoList.findIndex(todoListItem => todoListItem._id === params.id);
+
+      todoList[index] = data;
+      
+      self.setState({ todoList });
+
+      if(typeof callback === 'function') callback();
+    })
+    .catch(err => console.log(err));
+  }
+
   handleRemove(todoListId) {
     let self = this;
 
@@ -115,6 +152,7 @@ class TodoList extends React.Component {
                   id={todoListItem._id}
                   title={todoListItem.title}
                   key={todoListItem._id}
+                  onEdit={this.handleEdit}
                   onRemove={this.handleRemove}
                 />
               )

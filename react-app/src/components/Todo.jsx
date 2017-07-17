@@ -74,8 +74,17 @@ class Todo extends React.Component {
     .catch(err => console.log(err));
   }
 
-  handleEdit(params) {
+  handleEdit(params, callback) {
     let self = this;
+    let bodyObj = {};
+
+    if(typeof params.completed === 'boolean') {
+      bodyObj.isDone = params.completed;
+    }
+
+    if(params.title) {
+      bodyObj.title = params.title;
+    }
 
     fetch(`http://localhost:1234/todo/${params.id}`, {
       headers: {
@@ -83,7 +92,7 @@ class Todo extends React.Component {
         'Authorization': `JWT ${window.getCookie('token')}`
       },
       method: 'PATCH',
-      body: JSON.stringify({ isDone: params.completed })
+      body: JSON.stringify(bodyObj)
     })
     .then(response => {
       if(response.status === 200) {
@@ -100,6 +109,8 @@ class Todo extends React.Component {
       todos[index] = data;
       
       self.setState({ todos });
+
+      if(typeof callback === 'function') callback();
     })
     .catch(err => console.log(err));
   }
