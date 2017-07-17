@@ -8,11 +8,31 @@ class SignInForm extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleFocus = this.handleFocus.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.state = {
+      error: false,
+      errorMessage: ''
+    }
+  }
+
+  handleFocus() {
+    this.setState({
+      error: false,
+      errorMessage: ''
+    });
   }
 
   handleSubmit(e) {
     e.preventDefault();
+
+    if(!this.refs.login.value || !this.refs.password.value) {
+      return this.setState({
+        error: true,
+        errorMessage: 'Заполните все поля'
+      });
+    }
 
     let body = JSON.stringify({
       name: this.refs.login.value,
@@ -24,7 +44,23 @@ class SignInForm extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body
     })
-    .then(response => response.json())
+    .then(response => {
+      if(response.status === 200) {
+        return response.json();
+      }
+      else if(response.status === 401) {
+        this.setState({
+          error: true,
+          errorMessage: 'Неверные логин и/или пароль'
+        });
+      }
+      else {
+        this.setState({
+          error: true,
+          errorMessage: `Error ${response.status}: ${response.statusText}`
+        });
+      }
+    })
     .then(data => this.props.onSignIn(data.token))
     .catch(err => console.log(err));
   }
@@ -34,8 +70,11 @@ class SignInForm extends React.Component {
       <div className="sign-form-container sign-in">
         <form onSubmit={this.handleSubmit}>
           <h3>Авторизация</h3>
-          <input type="text" ref="login" placeholder="Логин" />
-          <input type="password" ref="password" placeholder="Пароль" />
+          {
+            this.state.error ? <p className="error">{this.state.errorMessage}</p> : ''
+          }
+          <input type="text" ref="login" placeholder="Логин" onFocus={this.handleFocus} />
+          <input type="password" ref="password" placeholder="Пароль" onFocus={this.handleFocus} />
           <button>Войти</button>
           <p>Нет учетной записи? <Link to="/sign-up">Зарегистрируйтесь</Link></p>
         </form>

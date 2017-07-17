@@ -5,6 +5,11 @@ body {
   margin: 0;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+}
+
 button {
   background: 0 0;
   border: none;
@@ -14,7 +19,7 @@ button {
   height: 36px;
   margin: 0;
   min-width: 64px;
-  padding: 0 16px;
+  padding: 0 5px;
   display: inline-block;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-size: 14px;
@@ -75,8 +80,9 @@ input {
 
 main {
   background: #fff;
-  width: 700px;
-  margin: 70px auto;
+  width: 960px;
+  min-width: 300px;
+  margin: 70px 10px;
   border-radius: 2px;
   overflow: hidden;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
@@ -86,57 +92,26 @@ header {
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  background-color: #eee;
+  background-color: steelblue;
+  color: #FFF;
   text-align: center;
-  text-transform: uppercase;
 }
 
 header h1 {
+  width: 90%;
   display: inline-block;
   margin: 1rem auto;
+  font-size: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Stats */
-.stats {
-  margin: 10px;
+header button {
+  color: inherit;
 }
-
-.stats table {
-  margin: auto;
-}
-
-.stats th {
-  text-align: right;
-  font-weight: normal;
-  letter-spacing: 2px;
-  font-size: .7em;
-}
-
-.stats td {
-  text-align: left;
-  font-size: 1.5rem;
-  font-family: monospace;
-}
-
-
-
-/* Stopwatch */
-.stopwatch {
-  padding: 15px 10px 5px 10px;
-}
-
-.stopwatch-time {
-  font-family: monospace;
-  font-size: 2em;
-}
-
-.stopwatch-controls button {
-  margin: 5px;
-  color: white;
-}
-
 
 /* Todo */
+
 .todo {
   display: flex;
   font-size: 1rem;
@@ -174,15 +149,6 @@ header h1 {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-
-/*.todo button:not(.checkbox) {
-  opacity: 0;
-  transition: all .2s;
-}
-
-.todo:hover button:not(.checkbox) {
-  opacity: 1;
-}*/
 
 .todo-edit-form {
   display: flex;
@@ -223,6 +189,7 @@ header h1 {
 }
 
 .sign-form-container form h3 {
+  margin: 10px 0;
   text-align: center;
 }
 
@@ -231,20 +198,24 @@ header h1 {
 }
 
 .sign-form-container form input:focus {
-  border-color: lightsteelblue;
+  border-color: lightskyblue;
 }
 
-.sign-form-container form input:nth-child(3) {
+.sign-form-container form input[type=password]:nth-of-type(2) {
   margin: 1em 0;
+}
+
+.sign-form-container form p.error {
+  width: 100%;
+  margin: 10px 0;
+  color: lightcoral;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sign-form-container form button {
   background: steelblue;
   color: #FFF;
-}
-
-.sign-form-container form button:hover {
-
 }
 
 .sign-form-container a {
@@ -257,7 +228,6 @@ header h1 {
 }
 
 .sign-form-container form p {
-/*  margin: 0;*/
   text-align: center;
 }
 
@@ -272,43 +242,21 @@ header h1 {
 
 .todo-form input {
   flex: 1;
+  width:95%;
   outline: none;
   transition: all .2s;
 }
 
 .todo-form input:focus {
-  border: 1px solid #00d8ff;
+  border: 1px solid lightskyblue;
 }
 
 .todo-form button {
   margin-left: 10px;
 }
 
-/* Animations */
-
-.slide-enter {
-  transform: translateX(-100%);
-}
-
-.slide-enter.slide-leave-active {
-  transform: translateX(0);
-  transition: all .5s; 
-}
-
-.slide-leave {
-  transform: translateX(0);
-}
-
-.slide-leave.slide-leave-active {
-  transform: translateX(100%);
-  transition: all .5s; 
-}
-
-.slide-appear {
-  opacity: 0;
-}
-
-.slide-appear.slide-appear-active {
-  opacity: 1;
-  transition: all .8s;
+@media screen and (max-width: 480px) {
+  main {
+    margin: 20px 10px;
+  }
 }

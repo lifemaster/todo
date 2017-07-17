@@ -8,15 +8,37 @@ class SignUpForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.handleFocus = this.handleFocus.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.state = {
+      error: false,
+      errorMessage: ''
+    }
+  }
+
+  handleFocus() {
+    this.setState({
+      error: false,
+      errorMessage: ''
+    });
   }
 
   handleSubmit(e) {
     e.preventDefault();
 
+    if(!this.refs.login.value || !this.refs.password.value || !this.refs.repassword.value) {
+      return this.setState({
+        error: true,
+        errorMessage: 'Заполните все поля'
+      });
+    }
+
     if(this.refs.password.value !== this.refs.repassword.value) {
-      return;
+      return this.setState({
+        error: true,
+        errorMessage: 'Пароли не совпадают'
+      });
     }
 
     let body = JSON.stringify({
@@ -29,7 +51,23 @@ class SignUpForm extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body
     })
-    .then(response => response.json())
+    .then(response => {
+      if(response.status === 200) {
+        return response.json()
+      }
+      else if(response.status === 400) {
+        this.setState({
+          error: true,
+          errorMessage: `Имя пользователя "${this.refs.login.value}" уже существует`
+        });
+      }
+      else {
+        this.setState({
+          error: true,
+          errorMessage: `Error ${response.status}: ${response.statusText}`
+        });
+      }
+    })
     .then(data => this.props.onSignUp(data.token))
     .catch(err => console.log(err));
   }
@@ -39,9 +77,12 @@ class SignUpForm extends React.Component {
       <div className="sign-form-container sign-up">
         <form onSubmit={this.handleSubmit}>
           <h3>Регистрация</h3>
-          <input type="text" ref="login" placeholder="Логин" />
-          <input type="password" ref="password" placeholder="Пароль" />
-          <input type="password" ref="repassword" placeholder="Повторите пароль" />
+          {
+            this.state.error ? <p className="error">{this.state.errorMessage}</p> : ''
+          }
+          <input type="text" ref="login" placeholder="Логин" onFocus={this.handleFocus} />
+          <input type="password" ref="password" placeholder="Пароль" onFocus={this.handleFocus} />
+          <input type="password" ref="repassword" placeholder="Повторите пароль" onFocus={this.handleFocus} />
           <button>Зарегистрироваться</button>
           <p>Если уже есть учетная запись, то вы можете <Link to="/sign-in">войти</Link></p>
         </form>
