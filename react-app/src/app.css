@@ -86,15 +86,13 @@ header {
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  color: white;
-  background-color: #222;
+  background-color: #eee;
   text-align: center;
   text-transform: uppercase;
 }
 
 header h1 {
   display: inline-block;
-  color: #00d8ff;
   margin: 1rem auto;
 }
 
@@ -199,6 +197,68 @@ header h1 {
 
 .todo-edit-form .save {
   margin-left: .5em;
+}
+
+/* Sign forms */
+
+.sign-form-container {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-form-container form {
+  display: flex;
+  width: 350px;
+  min-width: 280px;
+  margin: 10px;
+  padding: 10px;
+  background: #f5f5f5;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid lightgray;
+}
+
+.sign-form-container form h3 {
+  text-align: center;
+}
+
+.sign-form-container form input {
+  width: calc(100% - 20px);
+}
+
+.sign-form-container form input:focus {
+  border-color: lightsteelblue;
+}
+
+.sign-form-container form input:nth-child(3) {
+  margin: 1em 0;
+}
+
+.sign-form-container form button {
+  background: steelblue;
+  color: #FFF;
+}
+
+.sign-form-container form button:hover {
+
+}
+
+.sign-form-container a {
+  text-decoration: none;
+  color: steelblue;
+}
+
+.sign-form-container.sign-up form button {
+  margin: 1em 0;
+}
+
+.sign-form-container form p {
+/*  margin: 0;*/
+  text-align: center;
 }
 
 /* Todo form */

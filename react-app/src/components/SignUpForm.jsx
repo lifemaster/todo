@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import config from '../config';
 
@@ -35,12 +36,16 @@ class SignUpForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" ref="login" placeholder="Логин" />
-        <input type="password" ref="password" placeholder="Пароль" />
-        <input type="password" ref="repassword" placeholder="Повторите пароль" />
-        <button>Зарегистрироваться</button>
-      </form>
+      <div className="sign-form-container sign-up">
+        <form onSubmit={this.handleSubmit}>
+          <h3>Регистрация</h3>
+          <input type="text" ref="login" placeholder="Логин" />
+          <input type="password" ref="password" placeholder="Пароль" />
+          <input type="password" ref="repassword" placeholder="Повторите пароль" />
+          <button>Зарегистрироваться</button>
+          <p>Если уже есть учетная запись, то вы можете <Link to="/sign-in">войти</Link></p>
+        </form>
+      </div>
     ); 
   }
 }
