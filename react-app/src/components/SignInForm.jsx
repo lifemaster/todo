@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import config from '../config';
+
 class SignInForm extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +18,7 @@ class SignInForm extends React.Component {
       password: this.refs.password.value
     });
     
-    fetch('http://localhost:1234/sign-in', {
+    fetch(`${config.serverURI}/sign-in`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body

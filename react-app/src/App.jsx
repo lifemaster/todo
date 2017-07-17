@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Route, Redirect, Switch, withRouter } from 'react-router-dom';
 
+import cookie from './cookie';
+import config from './config';
+
 import SignUpForm from './components/SignUpForm';
 import SignInForm from './components/SignInForm';
 import TodoList from './components/TodoList';
@@ -21,12 +24,12 @@ class App extends Component {
   }
 
   signIn(token) {
-    window.setCookie('token', token, { expires: 1440 });
+    cookie.set('token', token, { expires: config.authCookieExpires });
     this.props.history.push('/todo-list');
   }
 
   signOut() {
-    window.removeCookie('token');
+    cookie.remove('token');
     this.props.history.push('/sign-in');
   }
 
@@ -37,14 +40,14 @@ class App extends Component {
           exact
           path="/"
           render={props =>
-            <Redirect to={document.cookie.token ? '/todo-list' : '/sign-in'} />
+            <Redirect to={cookie.get(config.authCookieName) ? '/todo-list' : '/sign-in'} />
           }
         />
 
         <Route
           path="/sign-up"
           render={props =>
-            window.getCookie('token') ?
+            cookie.get(config.authCookieName) ?
             <Redirect to="/todo-list" /> :
             <SignUpForm onSignUp={this.signIn} />
           }
@@ -53,7 +56,7 @@ class App extends Component {
         <Route
           path="/sign-in"
           render={props =>
-            window.getCookie('token') ?
+            cookie.get(config.authCookieName) ?
             <Redirect to="/todo-list" /> :
             <SignInForm onSignIn={this.signIn} />
           }
@@ -63,7 +66,7 @@ class App extends Component {
           exact
           path="/todo-list"
           render={props =>
-            window.getCookie('token') ?
+            cookie.get(config.authCookieName) ?
             <TodoList onSignOut={this.signOut} /> :
             <Redirect to="/sign-in" />
           }
@@ -72,7 +75,7 @@ class App extends Component {
         <Route
           path="/todo-list/:id"
           render={props =>
-            window.getCookie('token') ?
+            cookie.get(config.authCookieName) ?
             <Todo
               onHistoryBack={props.history.goBack}
               id={props.match.params.id}

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import cookie from '../cookie';
+import config from '../config';
+
 import Header from './Header';
 import Button from './Button';
 import TodoElement from './TodoElement';
@@ -23,10 +26,10 @@ class Todo extends React.Component {
   componentDidMount() {
     let self = this;
 
-    fetch(`http://localhost:1234/todo-list/${this.props.id}`, {
+    fetch(`${config.serverURI}/todo-list/${this.props.id}`, {
       method: 'GET',
       headers: {
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       }
     })
     .then(response => {
@@ -49,10 +52,10 @@ class Todo extends React.Component {
   handleAdd(title) {
     let self = this;
 
-    fetch(`http://localhost:1234/todo-list/${self.props.id}`, {
+    fetch(`${config.serverURI}/todo-list/${self.props.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'POST',
       body: JSON.stringify({ title })
@@ -86,10 +89,10 @@ class Todo extends React.Component {
       bodyObj.title = params.title;
     }
 
-    fetch(`http://localhost:1234/todo/${params.id}`, {
+    fetch(`${config.serverURI}/todo/${params.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'PATCH',
       body: JSON.stringify(bodyObj)
@@ -122,10 +125,10 @@ class Todo extends React.Component {
       return;
     }
 
-    fetch(`http://localhost:1234/todo/${todoId}`, {
+    fetch(`${config.serverURI}/todo/${todoId}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'DELETE'
     })

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import cookie from '../cookie';
+import config from '../config';
+
 import Header from './Header';
 import SignOut from './SignOut';
 import TodoListElement from './TodoListElement';
@@ -22,9 +25,9 @@ class TodoList extends React.Component {
   componentDidMount() {
     let self = this;
 
-    fetch('http://localhost:1234/todo-list', {
+    fetch(`${config.serverURI}/todo-list`, {
       headers: {
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'GET'
     })
@@ -45,10 +48,10 @@ class TodoList extends React.Component {
   handleAdd(title) {
     let self = this;
 
-    fetch('http://localhost:1234/todo-list', {
+    fetch(`${config.serverURI}/todo-list`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'POST',
       body: JSON.stringify({ title })
@@ -77,10 +80,10 @@ class TodoList extends React.Component {
 
     let self = this;
 
-    fetch(`http://localhost:1234/todo-list/${params.id}`, {
+    fetch(`${config.serverURI}/todo-list/${params.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'PATCH',
       body: JSON.stringify({title: params.title})
@@ -113,10 +116,10 @@ class TodoList extends React.Component {
       return;
     }
 
-    fetch(`http://localhost:1234/todo-list/${todoListId}`, {
+    fetch(`${config.serverURI}/todo-list/${todoListId}`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `JWT ${window.getCookie('token')}`
+        'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'DELETE'
     })
