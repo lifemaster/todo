@@ -2,7 +2,7 @@
 const passport   = require('./helpers/passport');
 const express    = require('express');
 const bodyParser = require('body-parser');
-const config     = require(`./config/${process.env.NODE_ENV || 'dev'}`);
+const config     = require('./helpers/constants').settings(process.env.NODE_ENV || 'dev');
 
 const app = express();
 
@@ -34,8 +34,29 @@ app.use((req, res, next) => {
 
 require('./routes')(app);
 
-app.listen(config.port, function() {
-  console.log(`Server is running on port ${config.port}`);
-});
+if(process.env.NODE_ENV === 'prod') {
+  const http = require('http');
+  const https = require('https');
+
+  app.all('*', (req, res, next) => {
+    if(req.secure) {
+       return next();
+    }
+    res.redirect('https://' + req.hostname + req.url);
+  });
+
+  http.createServer(app).listen(config.httpPort, () => {
+    console.log(`HTTP server is running on port ${config.httpPort}`);
+  });
+
+  https.createServer(config.cert, app).listen(config.httpsPort, null, () => {
+    console.log(`HTTPS server is running on port ${config.httpsPort}`);
+  });
+}
+else {
+  app.listen(config.httpPort, function() {
+    console.log(`Server is running on port ${config.httpPort}`);
+  });
+}
 
 module.exports = app;

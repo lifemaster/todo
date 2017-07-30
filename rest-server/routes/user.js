@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../schemas/user');
-const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
+const config = require('../helpers/constants').settings(process.env.NODE_ENV || 'dev');
 const passport = require('../helpers/passport');
 
 module.exports = function(app) {

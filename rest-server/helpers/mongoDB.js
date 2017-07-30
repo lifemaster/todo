@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
+const config   = require('./constants').settings(process.env.NODE_ENV || 'dev');
 
 // Create the database connection 
 mongoose.connect(config.dbURI); 

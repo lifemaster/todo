@@ -1,6 +1,6 @@
 const passport = require('../helpers/passport');
 const jwt = require('jsonwebtoken');
-const config = require(`../config/${process.env.NODE_ENV || 'dev'}`);
+const config = require('../helpers/constants').settings(process.env.NODE_ENV || 'dev');
 const TodoList = require('../schemas/todo-list');
 const Todo = require('../schemas/todo');
 
