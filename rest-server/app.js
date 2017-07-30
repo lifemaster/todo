@@ -9,10 +9,16 @@ const app = express();
 app.use(passport.initialize());
 app.use(bodyParser.json());
 
+app.use(express.static(__dirname + '/public'));
+
+app.use((req, res, next) => {
+  req.originalUrl.match(/^\/api/) ? next() : res.redirect('/');
+});
+
 app.use((req, res, next) => {
   let origin = req.headers.origin;
 
-  if(origin) {
+  if(origin && process.env.NODE_ENV !== 'prod') {
     let allowedOrigins = config.allowedOrigins;
 
     if(allowedOrigins.indexOf(origin) > -1) {
@@ -29,7 +35,7 @@ app.use((req, res, next) => {
 require('./routes')(app);
 
 app.listen(config.port, function() {
-  console.log(`Server running on port ${config.port}`);
+  console.log(`Server is running on port ${config.port}`);
 });
 
 module.exports = app;

@@ -25,7 +25,7 @@ class TodoList extends React.Component {
   componentDidMount() {
     let self = this;
 
-    fetch(`${config.serverURI}/todo-list`, {
+    fetch(`${config.serverURI}/api/todo-list`, {
       headers: {
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
@@ -48,7 +48,7 @@ class TodoList extends React.Component {
   handleAdd(title) {
     let self = this;
 
-    fetch(`${config.serverURI}/todo-list`, {
+    fetch(`${config.serverURI}/api/todo-list`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
@@ -80,7 +80,7 @@ class TodoList extends React.Component {
 
     let self = this;
 
-    fetch(`${config.serverURI}/todo-list/${params.id}`, {
+    fetch(`${config.serverURI}/api/todo-list/${params.id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
@@ -116,7 +116,7 @@ class TodoList extends React.Component {
       return;
     }
 
-    fetch(`${config.serverURI}/todo-list/${todoListId}`, {
+    fetch(`${config.serverURI}/api/todo-list/${todoListId}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`

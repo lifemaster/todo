@@ -26,7 +26,7 @@ class Todo extends React.Component {
   componentDidMount() {
     let self = this;
 
-    fetch(`${config.serverURI}/todo-list/${this.props.id}`, {
+    fetch(`${config.serverURI}/api/todo-list/${this.props.id}`, {
       method: 'GET',
       headers: {
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
@@ -52,7 +52,7 @@ class Todo extends React.Component {
   handleAdd(title) {
     let self = this;
 
-    fetch(`${config.serverURI}/todo-list/${self.props.id}`, {
+    fetch(`${config.serverURI}/api/todo-list/${self.props.id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
@@ -89,7 +89,7 @@ class Todo extends React.Component {
       bodyObj.title = params.title;
     }
 
-    fetch(`${config.serverURI}/todo/${params.id}`, {
+    fetch(`${config.serverURI}/api/todo/${params.id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
@@ -125,7 +125,7 @@ class Todo extends React.Component {
       return;
     }
 
-    fetch(`${config.serverURI}/todo/${todoId}`, {
+    fetch(`${config.serverURI}/api/todo/${todoId}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`

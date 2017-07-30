@@ -46,7 +46,7 @@ class SignUpForm extends React.Component {
       password: this.refs.password.value
     });
     
-    fetch(`${config.serverURI}/sign-up`, {
+    fetch(`${config.serverURI}/api/sign-up`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body

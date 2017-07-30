@@ -8,7 +8,7 @@ module.exports = function(app) {
   
   // CRUD for todo-list
   
-  app.get('/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.get('/api/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {
@@ -20,7 +20,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.post('/api/todo-list', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title) {
       res.status(400).send('title is required');
       return;
@@ -43,7 +43,7 @@ module.exports = function(app) {
     });
   });
 
-  app.patch('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.patch('/api/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title && !req.body.description) {
       res.status(400).send('title or description is required');
       return;
@@ -74,7 +74,7 @@ module.exports = function(app) {
     });
   });
 
-  app.delete('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.delete('/api/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {
@@ -114,7 +114,7 @@ module.exports = function(app) {
   
   // CRUD for todos
 
-  app.get('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.get('/api/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     let listId = req.params.id;
 
@@ -142,7 +142,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.post('/api/todo-list/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if(!req.body.title) {
       res.status(400).send('title is required');
       return;
@@ -182,7 +182,7 @@ module.exports = function(app) {
     });
   });
 
-  app.patch('/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.patch('/api/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     if('title' in req.body && !req.body.title) {
       res.status(400).send('title mustn\'t be an empty string');
       return;
@@ -219,7 +219,7 @@ module.exports = function(app) {
     });
   });
 
-  app.delete('/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  app.delete('/api/todo/:id', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let token = req.headers.authorization;
     
     jwt.verify(token.slice(4), config.jwtSecret, (err, decoded) => {

@@ -39,7 +39,7 @@ class SignInForm extends React.Component {
       password: this.refs.password.value
     });
     
-    fetch(`${config.serverURI}/sign-in`, {
+    fetch(`${config.serverURI}/api/sign-in`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body
