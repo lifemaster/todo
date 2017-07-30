@@ -9,6 +9,15 @@ const app = express();
 app.use(passport.initialize());
 app.use(bodyParser.json());
 
+if(process.env.NODE_ENV === 'prod') {
+  app.all('*', (req, res, next) => {
+    if(req.secure) {
+      return next();
+    }
+    res.redirect('https://' + req.hostname + req.url);
+  });
+}
+
 app.use(express.static(__dirname + '/public'));
 
 app.use((req, res, next) => {
@@ -37,13 +46,6 @@ require('./routes')(app);
 if(process.env.NODE_ENV === 'prod') {
   const http = require('http');
   const https = require('https');
-
-  app.all('*', (req, res, next) => {
-    if(req.secure) {
-       return next();
-    }
-    res.redirect('https://' + req.hostname + req.url);
-  });
 
   http.createServer(app).listen(config.httpPort, () => {
     console.log(`HTTP server is running on port ${config.httpPort}`);
