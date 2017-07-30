@@ -41,7 +41,7 @@ class Cookie {
 
   remove(name) {
     this.set(name, '', {
-      expires: new Date(Date.now() - 86400000).toUTCString()
+      expires: new Date(0)
     });
   }
 }
