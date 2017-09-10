@@ -173,7 +173,7 @@ class Todo extends React.Component {
   handleRemove(todoId) {
     let self = this;
 
-    if(!window.confirm('Вы уверены?')) {
+    if(!window.confirm('Task will be deleted. Are you sure?')) {
       return;
     }
 

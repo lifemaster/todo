@@ -164,7 +164,7 @@ class TodoList extends React.Component {
   handleRemove(todoListId) {
     let self = this;
 
-    if(!window.confirm('Все задачи с этой группы будут безвозвратно удалены. Вы хотите продолжить?')) {
+    if(!window.confirm('All tasks in this project will be removed. Are you sure?')) {
       return;
     }
 
