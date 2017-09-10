@@ -10,7 +10,8 @@ let todoListSchema = new Schema({
     type: String,
     required: true
   },
-  description: String
+  description: String,
+  order: Number
 });
 
 module.exports = mongoose.model('TodoList', todoListSchema);

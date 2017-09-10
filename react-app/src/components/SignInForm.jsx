@@ -30,7 +30,7 @@ class SignInForm extends React.Component {
     if(!this.refs.login.value || !this.refs.password.value) {
       return this.setState({
         error: true,
-        errorMessage: 'Заполните все поля'
+        errorMessage: 'All fields must be filled out'
       });
     }
 
@@ -51,7 +51,7 @@ class SignInForm extends React.Component {
       else if(response.status === 401) {
         this.setState({
           error: true,
-          errorMessage: 'Неверные логин и/или пароль'
+          errorMessage: 'Wrong username/password'
         });
       }
       else {
@@ -69,14 +69,14 @@ class SignInForm extends React.Component {
     return (
       <div className="sign-form-container sign-in">
         <form onSubmit={this.handleSubmit}>
-          <h3>Авторизация</h3>
+          <h3>Authorization</h3>
           {
             this.state.error ? <p className="error">{this.state.errorMessage}</p> : ''
           }
-          <input type="text" ref="login" placeholder="Логин" onFocus={this.handleFocus} />
-          <input type="password" ref="password" placeholder="Пароль" onFocus={this.handleFocus} />
-          <button>Войти</button>
-          <p>Нет учетной записи? <Link to="/sign-up">Зарегистрируйтесь</Link></p>
+          <input type="text" ref="login" placeholder="Username" onFocus={this.handleFocus} />
+          <input type="password" ref="password" placeholder="Password" onFocus={this.handleFocus} />
+          <button>Sing in</button>
+          <p>No account? <Link to="/sign-up">Sign up</Link></p>
         </form>
       </div>
     ); 

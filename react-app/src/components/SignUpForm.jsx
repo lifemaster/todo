@@ -30,14 +30,14 @@ class SignUpForm extends React.Component {
     if(!this.refs.login.value || !this.refs.password.value || !this.refs.repassword.value) {
       return this.setState({
         error: true,
-        errorMessage: 'Заполните все поля'
+        errorMessage: 'All fields must be filled out!'
       });
     }
 
     if(this.refs.password.value !== this.refs.repassword.value) {
       return this.setState({
         error: true,
-        errorMessage: 'Пароли не совпадают'
+        errorMessage: 'Passwords don\'t match'
       });
     }
 
@@ -58,7 +58,7 @@ class SignUpForm extends React.Component {
       else if(response.status === 400) {
         this.setState({
           error: true,
-          errorMessage: `Имя пользователя "${this.refs.login.value}" уже существует`
+          errorMessage: `Username "${this.refs.login.value}" doesn't exist`
         });
       }
       else {
@@ -76,15 +76,15 @@ class SignUpForm extends React.Component {
     return (
       <div className="sign-form-container sign-up">
         <form onSubmit={this.handleSubmit}>
-          <h3>Регистрация</h3>
+          <h3>Registration</h3>
           {
             this.state.error ? <p className="error">{this.state.errorMessage}</p> : ''
           }
-          <input type="text" ref="login" placeholder="Логин" onFocus={this.handleFocus} />
-          <input type="password" ref="password" placeholder="Пароль" onFocus={this.handleFocus} />
-          <input type="password" ref="repassword" placeholder="Повторите пароль" onFocus={this.handleFocus} />
-          <button>Зарегистрироваться</button>
-          <p>Если уже есть учетная запись, то вы можете <Link to="/sign-in">войти</Link></p>
+          <input type="text" ref="login" placeholder="Username" onFocus={this.handleFocus} />
+          <input type="password" ref="password" placeholder="Password" onFocus={this.handleFocus} />
+          <input type="password" ref="repassword" placeholder="Confirm password" onFocus={this.handleFocus} />
+          <button>Sign up</button>
+          <p>If you have already had an account you can <Link to="/sign-in">sign in</Link></p>
         </form>
       </div>
     ); 

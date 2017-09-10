@@ -18,7 +18,8 @@ let todoSchema = new Schema({
   isDone: {
     type: Boolean,
     default: false
-  }
+  },
+  order: Number
 });
 
 module.exports = mongoose.model('Todo', todoSchema);

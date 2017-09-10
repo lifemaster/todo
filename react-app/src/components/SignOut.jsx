@@ -4,7 +4,7 @@ import Button from './Button';
 
 function SignOut(props) {
   return (
-    <Button onClick={props.onSignOut}>Выйти</Button>
+    <Button onClick={props.onSignOut}>Logout</Button>
   );
 }
 

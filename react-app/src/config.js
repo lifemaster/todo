@@ -1,5 +1,5 @@
 let config = {
-  serverURI: '',
+  serverURI: 'http://localhost:1234',
   authCookieName: 'token',
   authCookieExpires: 0
 };

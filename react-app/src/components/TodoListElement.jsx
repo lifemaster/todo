@@ -64,6 +64,8 @@ class TodoListElement extends React.Component {
             icon="delete"
             onClick={() => this.props.onRemove(this.props.id)}
           />
+
+          <Button className="icon" icon="swap_vert" />
         </div>
       );
     }

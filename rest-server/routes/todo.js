@@ -16,7 +16,7 @@ module.exports = function(app) {
 
       let userId = decoded.id;
 
-      TodoList.find({ userId }, (err, docs) => err ? next(err) : res.json(docs));
+      TodoList.find({ userId }, null, {sort: {order: 1}}, (err, docs) => err ? next(err) : res.json(docs));
     });
   });
 
@@ -36,7 +36,8 @@ module.exports = function(app) {
       let newTodoList = new TodoList({
         userId,
         title: req.body.title,
-        description: req.body.description || ''
+        description: req.body.description || '',
+        order: req.body.order
       });
 
       newTodoList.save((err, doc) => err ? next(err) : res.json(doc));
@@ -68,6 +69,7 @@ module.exports = function(app) {
 
         doc.title = req.body.title || doc.title;
         doc.description = req.body.description || doc.description;
+        doc.order = (req.body.order || req.body.order === 0) ? req.body.order : doc.order;
 
         doc.save((err, doc) => err ? next(err) : res.json(doc));
       });
@@ -133,7 +135,7 @@ module.exports = function(app) {
 
         let listTitle = doc.title;
 
-        Todo.find({ '$and': [{ listId }, { userId }] }, (err, docs) => {
+        Todo.find({ '$and': [{ listId }, { userId }] }, null, {sort: {order: 1}}, (err, docs) => {
           if(err) return next(err);
 
           res.json({ listTitle, todos: docs });
@@ -213,6 +215,7 @@ module.exports = function(app) {
         doc.title = req.body.title || doc.title;
         doc.description = req.body.description || doc.description;
         doc.isDone = typeof req.body.isDone === 'boolean' ? req.body.isDone : doc.isDone;
+        doc.order = (req.body.order || req.body.order === 0) ? req.body.order : doc.order;
 
         doc.save((err, doc) => err ? next(err) : res.json(doc));
       });

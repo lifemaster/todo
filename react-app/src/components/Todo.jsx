@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
 import cookie from '../cookie';
 import config from '../config';
@@ -8,6 +9,30 @@ import Header from './Header';
 import Button from './Button';
 import TodoElement from './TodoElement';
 import Form from './Form';
+
+const SortableItem = SortableElement(({value, self}) => {
+  return (
+    <div>
+      <TodoElement
+        id={value._id}
+        title={value.title}
+        completed={value.isDone}
+        onEdit={self.handleEdit}
+        onRemove={self.handleRemove}
+      />
+    </div>
+  )
+});
+
+const SortableList = SortableContainer(({items, self}) => {
+  return (
+    <section className="todo-list">
+      {items.map((value, index) => (
+        <SortableItem key={`item-${index}`} index={index} value={value} self={self} />
+      ))}
+    </section>
+  );
+});
 
 class Todo extends React.Component {
   constructor() {
@@ -47,6 +72,33 @@ class Todo extends React.Component {
       });
     })
     .catch(err => console.log(err));
+  }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+    const self = this;
+    let primiseArr = [];
+
+    self.setState({
+      todos: arrayMove(this.state.todos, oldIndex, newIndex)
+    }, () => {
+      self.state.todos.forEach((todo, index) => {
+        primiseArr.push(
+          fetch(`${config.serverURI}/api/todo/${todo._id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `JWT ${cookie.get(config.authCookieName)}`
+            },
+            method: 'PATCH',
+            body: JSON.stringify({ order: index })
+          })
+        );
+      });
+      Promise.all(primiseArr);
+    })
+  }
+
+  shouldCancelSortStart(e) {
+    return e.target.innerHTML === 'swap_vert' ? false : true;
   }
 
   handleAdd(title) {
@@ -151,28 +203,16 @@ class Todo extends React.Component {
   render() {
     return (
       <main>
-        <Header
-          title={this.state.todoListTitle}
-          element={<Button onClick={this.props.onHistoryBack}>Назад</Button>}
+        <Header title={`Task list of project: ${this.state.todoListTitle}`} element={<Button onClick={this.props.onHistoryBack}>Back</Button>} />
+         <SortableList
+          items={this.state.todos}
+          onSortEnd={this.onSortEnd}
+          self={this}
+          lockToContainerEdges={true}
+          lockOffset={0}
+          lockAxis="y"
+          shouldCancelStart={this.shouldCancelSortStart}
         />
-        
-        <section className="todo-list">
-          {
-            this.state.todos.map(todo => {
-              return (
-                <TodoElement
-                  id={todo._id}
-                  title={todo.title}
-                  completed={todo.isDone}
-                  key={todo._id}
-                  onEdit={this.handleEdit}
-                  onRemove={this.handleRemove}
-                />
-              )
-            })
-          }
-        </section>
-
         <Form onAdd={this.handleAdd}/>
       </main>
     );

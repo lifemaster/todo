@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
 import cookie from '../cookie';
 import config from '../config';
@@ -9,10 +10,34 @@ import SignOut from './SignOut';
 import TodoListElement from './TodoListElement';
 import Form from './Form';
 
+const SortableItem = SortableElement(({value, self}) => {
+  return (
+    <div>
+      <TodoListElement
+        id={value._id}
+        title={value.title}
+        onEdit={self.handleEdit}
+        onRemove={self.handleRemove}
+      />
+    </div>
+  )
+});
+
+const SortableList = SortableContainer(({items, self}) => {
+  return (
+    <section className="todo-list">
+      {items.map((value, index) => (
+        <SortableItem key={`item-${index}`} index={index} value={value} self={self} />
+      ))}
+    </section>
+  );
+});
+
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.onSortEnd = this.onSortEnd.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
@@ -39,10 +64,37 @@ class TodoList extends React.Component {
         console.log(response);
       }
     })
-    .then(data => {      
+    .then(data => {
       self.setState({ todoList: data });
     })
     .catch(err => console.log(err));
+  }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+    const self = this;
+    let primiseArr = [];
+
+    self.setState({
+      todoList: arrayMove(this.state.todoList, oldIndex, newIndex)
+    }, () => {
+      self.state.todoList.forEach((todo, index) => {
+        primiseArr.push(
+          fetch(`${config.serverURI}/api/todo-list/${todo._id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `JWT ${cookie.get(config.authCookieName)}`
+            },
+            method: 'PATCH',
+            body: JSON.stringify({ title: todo.title, order: index })
+          })
+        );
+      });
+      Promise.all(primiseArr);
+    })
+  }
+
+  shouldCancelSortStart(e) {
+    return e.target.innerHTML === 'swap_vert' ? false : true;
   }
   
   handleAdd(title) {
@@ -54,7 +106,7 @@ class TodoList extends React.Component {
         'Authorization': `JWT ${cookie.get(config.authCookieName)}`
       },
       method: 'POST',
-      body: JSON.stringify({ title })
+      body: JSON.stringify({ title, order: this.state.todoList.length })
     })
     .then(response => {
       if(response.status === 200) {
@@ -142,27 +194,16 @@ class TodoList extends React.Component {
   render() {
     return (
       <main>
-        <Header
-          title="Todo list"
-          element={<SignOut onSignOut={this.props.onSignOut}/>}
+        <Header title="Project list" element={<SignOut onSignOut={this.props.onSignOut}/>} />
+        <SortableList
+          items={this.state.todoList}
+          onSortEnd={this.onSortEnd}
+          self={this}
+          lockToContainerEdges={true}
+          lockOffset={0}
+          lockAxis="y"
+          shouldCancelStart={this.shouldCancelSortStart}
         />
-        
-        <section className="todo-list">
-          {
-            this.state.todoList.map(todoListItem => {
-              return (
-                <TodoListElement
-                  id={todoListItem._id}
-                  title={todoListItem.title}
-                  key={todoListItem._id}
-                  onEdit={this.handleEdit}
-                  onRemove={this.handleRemove}
-                />
-              )
-            })
-          }
-        </section>
-
         <Form onAdd={this.handleAdd}/>
       </main>
     );
